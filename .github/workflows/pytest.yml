@@ -31,10 +31,11 @@ jobs:
       - name: Install project dependencies
         run: |
           uv sync --dev
+          uv pip install -e .[dev]
 
       - name: Run main project tests
         run: |
-          pytest ./tests -v
+          python -m pytest ./tests -v
         shell: bash
 
   test_pyballisticcalc:
@@ -62,26 +63,21 @@ jobs:
         run: |
           # First, install main project's dependencies to ensure py-ballisticcalc is available for metadata check
           uv sync --dev
+          uv pip install -e .[dev]
           echo "pybc_version=$(python -c 'from importlib.metadata import metadata; print(metadata("py-ballisticcalc")["Version"])')" >> "$GITHUB_OUTPUT"
         id: get_installed_version
         shell: bash
 
-      - name: Clone py-ballisticcalc from specific tag based on installed version
+      - name: Clone py-ballisticcalc from specific tag based on installed version to use it's tests definition
         run: |
           # Access the version obtained from the previous step's output
           PYBC_VERSION="${{ steps.get_installed_version.outputs.pybc_version }}"
           echo "Cloning py-ballisticcalc with tag: v$PYBC_VERSION"
-          git clone --branch "v$PYBC_VERSION" --single-branch https://github.com/o-murphy/py-ballisticcalc.git py-ballisticcalc_repo
+          git clone --branch "v$PYBC_VERSION" --single-branch https://github.com/o-murphy/py-ballisticcalc.git py-ballisticcalc
         shell: bash
 
-      - name: Install py-ballisticcalc dependencies
+      - name: Run py-ballisticcalc tests with --engine=RKballistic
         run: |
-          cd py-ballisticcalc_repo
-          uv sync --dev # Assuming py-ballisticcalc also uses uv and has a dev dependency group
-        shell: bash
-
-      - name: Run py-ballisticcalc tests with --engine RKballistic
-        run: |
-          cd py-ballisticcalc_repo
-          pytest ./tests -v --engine RKballistic
+          cd py-ballisticcalc
+          pytest ./tests -v --engine=RKballistic
         shell: bash
