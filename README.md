@@ -1,15 +1,1 @@
-# RKballistic
-Ballistic computer that uses higher-order numerical integration for improved performance vs the Euler integration used in the base project https://github.com/o-murphy/py-ballisticcalc.
-
-### Install with dev dependencies
-```shell
-pip install -e .[dev]
-```
-
-### Build sdist and wheel for deployment
-```
-python -m build
-```
-
-## Usage
-**See [ExampleRK4.ipynb](ExampleRK4.ipynb) for usage and detailed illustrations of all features.**
+⚠️ This project is no longer maintained.  Higher-order integration methods have been added beginning in v2.2 of the [py_ballisticcalc](https://github.com/o-murphy/py-ballisticcalc) ballistic calculator.  Please refer to that repository for active development.
